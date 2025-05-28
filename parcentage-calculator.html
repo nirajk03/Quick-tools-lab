@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Advanced Percentage Calculator</title>
+  <!-- Font Awesome for Home Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kNV+XU1Vn8t6R6W7E5Y5qzY9n3aK5R1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      padding: 10px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+      overflow: hidden;
+    }
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      background: linear-gradient(135deg, #2196f3, #00bcd4);
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+      margin-right: 15px;
+    }
+    .home-btn:hover { background: linear-gradient(135deg, #1e88e5, #00acc1); }
+    .calculator-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      background: linear-gradient(90deg, #3498db, #e74c3c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      flex-grow: 1;
+      text-align: center;
+    }
+    .calculator {
+      padding: 20px;
+    }
+    /* Tabs */
+    .tab-nav {
+      display: flex;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 600;
+      color: #7f8c8d;
+      border-radius: 6px;
+      transition: background 0.3s;
+      min-width: 100px;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: #3498db;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .calculator-form { display: none; }
+    .calculator-form.active { display: block; animation: fadeIn 0.3s ease; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #34495e;
+      font-weight: 600;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #f8f9fa;
+      transition: all 0.3s;
+    }
+    .input-group input:focus {
+      background: #fff;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+      outline: none;
+    }
+    .calculate-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(52,152,219,0.2);
+      transition: transform 0.1s;
+    }
+    .calculate-btn:active { transform: translateY(1px); }
+    .results {
+      margin-top: 20px;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      display: none;
+      animation: slideUp 0.3s ease;
+    }
+    .results h3 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .result-item:last-child { border-bottom: none; }
+    .result-label { font-weight: 600; color: #34495e; }
+    .result-value { font-weight: 700; color: #e74c3c; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="https://quicktoolslab.blogspot.com/" class="home-btn">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <h1 class="calculator-title">Advanced Percentage Calculator</h1>
+    </div>
+    <div class="calculator">
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="openTab('tab1', event)">X% of Y</button>
+        <button class="tab-btn" onclick="openTab('tab2', event)">X is % of Y</button>
+        <button class="tab-btn" onclick="openTab('tab3', event)">% Change</button>
+      </div>
+      <div id="tab1" class="calculator-form active">
+        <div class="input-group">
+          <label for="percentage1">What is</label>
+          <input type="number" id="percentage1" placeholder="e.g., 20">
+        </div>
+        <div class="input-group">
+          <label for="number1">% of</label>
+          <input type="number" id="number1" placeholder="e.g., 500">
+        </div>
+        <button class="calculate-btn" onclick="calculatePercentageOf()">Calculate</button>
+        <div class="results" id="result1">
+          <h3>Result</h3>
+          <div class="result-item"><span class="result-label">Value:</span><span class="result-value" id="result-value1">--</span></div>
+        </div>
+      </div>
+      <div id="tab2" class="calculator-form">
+        <div class="input-group">
+          <label for="number2a">What % is</label>
+          <input type="number" id="number2a" placeholder="e.g., 50">
+        </div>
+        <div class="input-group">
+          <label for="number2b">of</label>
+          <input type="number" id="number2b" placeholder="e.g., 200">
+        </div>
+        <button class="calculate-btn" onclick="calculateWhatPercentage()">Calculate</button>
+        <div class="results" id="result2">
+          <h3>Result</h3>
+          <div class="result-item"><span class="result-label">Percentage:</span><span class="result-value" id="result-value2">--</span></div>
+        </div>
+      </div>
+      <div id="tab3" class="calculator-form">
+        <div class="input-group">
+          <label for="original-value">Original Value</label>
+          <input type="number" id="original-value" placeholder="e.g., 100">
+        </div>
+        <div class="input-group">
+          <label for="new-value">New Value</label>
+          <input type="number" id="new-value" placeholder="e.g., 150">
+        </div>
+        <button class="calculate-btn" onclick="calculatePercentageChange()">Calculate</button>
+        <div class="results" id="result3">
+          <h3>Result</h3>
+          <div class="result-item"><span class="result-label">Change:</span><span class="result-value" id="result-value3">--</span></div>
+          <div class="result-item"><span class="result-label">Type:</span><span class="result-value" id="change-type">--</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openTab(tabId, event) {
+      document.querySelectorAll('.calculator-form').forEach(f => f.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.results').forEach(r => r.style.display = 'none');
+    }
+    function calculatePercentageOf() {
+      const p = parseFloat(document.getElementById('percentage1').value);
+      const n = parseFloat(document.getElementById('number1').value);
+      if (isNaN(p) || isNaN(n)) return alert('Enter valid numbers');
+      const res = (p/100)*n;
+      document.getElementById('result-value1').textContent = res.toFixed(2);
+      document.getElementById('result1').style.display = 'block';
+    }
+    function calculateWhatPercentage() {
+      const a = parseFloat(document.getElementById('number2a').value);
+      const b = parseFloat(document.getElementById('number2b').value);
+      if (isNaN(a) || isNaN(b)) return alert('Enter valid numbers');
+      if (b === 0) return alert('Cannot divide by zero');
+      const res = (a/b)*100;
+      document.getElementById('result-value2').textContent = res.toFixed(2) + '%';
+      document.getElementById('result2').style.display = 'block';
+    }
+    function calculatePercentageChange() {
+      const o = parseFloat(document.getElementById('original-value').value);
+      const nv = parseFloat(document.getElementById('new-value').value);
+      if (isNaN(o) || isNaN(nv)) return alert('Enter valid numbers');
+      if (o === 0) return alert('Original value cannot be zero');
+      const ch = ((nv - o)/o)*100;
+      document.getElementById('result-value3').textContent = Math.abs(ch).toFixed(2) + '%';
+      document.getElementById('change-type').textContent = ch>=0?'Increase':'Decrease';
+      document.getElementById('result3').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

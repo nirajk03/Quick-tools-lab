@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QR Code Generator Tool</title>
+  <style>
+    /* --- Same Styling (No Changes to UI) --- */
+    .qr-generator-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .qr-generator-title {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #2563eb;
+    }
+
+    .qr-generator-subtitle {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #64748b;
+    }
+
+    .qr-generator-form {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      margin-bottom: 1.5rem;
+    }
+
+    .qr-generator-form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .qr-generator-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .qr-generator-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color 0.2s;
+    }
+
+    .qr-generator-textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .qr-generator-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .qr-generator-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .qr-generator-btn:hover,
+    .qr-generator-btn:focus {
+      background-color: #1d4ed8;
+      outline: none;
+    }
+
+    .qr-generator-btn:active {
+      transform: scale(0.98);
+    }
+
+    .qr-generator-result {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .qr-generator-code-container {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background-color: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    #qr-generator-code {
+      width: 256px;
+      height: 256px;
+    }
+
+    @media (max-width: 600px) {
+      .qr-generator-container {
+        padding: 1rem;
+      }
+
+      .qr-generator-title {
+        font-size: 1.5rem;
+      }
+
+      .qr-generator-form,
+      .qr-generator-result {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="qr-generator-container">
+    <h2 class="qr-generator-title">QR Code Generator</h2>
+    <p class="qr-generator-subtitle">Enter any text or URL to generate a QR code</p>
+
+    <form id="qr-generator-form" class="qr-generator-form">
+      <div class="qr-generator-form-group">
+        <label for="qr-generator-content" class="qr-generator-label">Content to encode:</label>
+        <textarea
+          id="qr-generator-content"
+          class="qr-generator-textarea"
+          rows="3"
+          placeholder="Enter URL, text, or other content..."
+          required
+        ></textarea>
+      </div>
+
+      <div class="qr-generator-actions">
+        <button type="submit" class="qr-generator-btn">
+          Generate QR Code
+        </button>
+      </div>
+    </form>
+
+    <div id="qr-generator-result" class="qr-generator-result">
+      <div class="qr-generator-code-container">
+        <div id="qr-generator-code"></div>
+      </div>
+      <button id="qr-generator-download-btn" class="qr-generator-btn">
+        Download PNG
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ WORKING QR LIBRARY ✅ -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const qrForm = document.getElementById("qr-generator-form");
+      const qrContent = document.getElementById("qr-generator-content");
+      const qrResult = document.getElementById("qr-generator-result");
+      const qrCodeElement = document.getElementById("qr-generator-code");
+      const downloadBtn = document.getElementById("qr-generator-download-btn");
+
+      let currentQRCode = null;
+
+      function generateQRCode(content) {
+        qrCodeElement.innerHTML = "";
+        currentQRCode = new QRCode(qrCodeElement, {
+          text: content,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        qrResult.style.display = "flex";
+      }
+
+      qrForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const content = qrContent.value.trim();
+        if (content) {
+          generateQRCode(content);
+          qrResult.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+
+      downloadBtn.addEventListener("click", function () {
+        if (!currentQRCode) return;
+        const canvas = qrCodeElement.querySelector("canvas");
+        if (!canvas) return;
+        const link = document.createElement("a");
+        link.download = "qr-code.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      qrContent.focus();
+    });
+  </script>
+</body>
+</html>

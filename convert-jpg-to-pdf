@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #imageList {
+            margin-top: 20px;
+        }
+
+        .image-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-right: 15px;
+            border: 1px solid #ccc;
+        }
+
+        .image-info {
+            flex-grow: 1;
+        }
+
+        .image-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .image-controls button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .remove-btn {
+            background: #f44336;
+        }
+
+        .remove-btn:hover {
+            background: #d32f2f;
+        }
+
+        .file-input-container {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image to PDF Converter</h1>
+        <p>Upload JPEG/PNG images to create a PDF</p>
+        
+        <div class="controls">
+            <button id="addImageBtn">Add Image</button>
+            <button id="generatePdfBtn">Generate PDF</button>
+        </div>
+        
+        <div id="imageInputs"></div>
+        
+        <div id="previewArea">
+            <h2>Preview & Order</h2>
+            <div id="imageList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInputsContainer = document.getElementById('imageInputs');
+            const imageList = document.getElementById('imageList');
+            const addImageBtn = document.getElementById('addImageBtn');
+            const generatePdfBtn = document.getElementById('generatePdfBtn');
+            
+            let images = [];
+            
+            // Add initial file input
+            addImageBtn.addEventListener('click', addImageInput);
+            
+            // Generate PDF button
+            generatePdfBtn.addEventListener('click', generatePdf);
+            
+            // Add the first input field
+            addImageInput();
+            
+            function addImageInput() {
+                const inputContainer = document.createElement('div');
+                inputContainer.className = 'file-input-container';
+                
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/jpeg,image/png';
+                fileInput.className = 'file-input';
+                
+                fileInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const file = e.target.files[0];
+                        if (!file.type.match('image.*')) {
+                            alert('Please select an image file (JPEG/PNG)');
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            addImageToList(event.target.result, file.name);
+                            inputContainer.remove();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+                
+                inputContainer.appendChild(fileInput);
+                imageInputsContainer.appendChild(inputContainer);
+            }
+            
+            function addImageToList(imageData, filename) {
+                const imageId = Date.now();
+                
+                images.push({
+                    id: imageId,
+                    data: imageData,
+                    name: filename
+                });
+                
+                renderImageList();
+            }
+            
+            function renderImageList() {
+                imageList.innerHTML = '';
+                
+                images.forEach((image, index) => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    imageItem.dataset.id = image.id;
+                    
+                    const img = document.createElement('img');
+                    img.src = image.data;
+                    img.className = 'image-preview';
+                    img.alt = image.name;
+                    
+                    const imageInfo = document.createElement('div');
+                    imageInfo.className = 'image-info';
+                    imageInfo.textContent = image.name;
+                    
+                    const controls = document.createElement('div');
+                    controls.className = 'image-controls';
+                    
+                    const upBtn = document.createElement('button');
+                    upBtn.textContent = '↑';
+                    upBtn.addEventListener('click', () => moveImage(index, 'up'));
+                    
+                    const downBtn = document.createElement('button');
+                    downBtn.textContent = '↓';
+                    downBtn.addEventListener('click', () => moveImage(index, 'down'));
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.addEventListener('click', () => removeImage(image.id));
+                    
+                    controls.appendChild(upBtn);
+                    controls.appendChild(downBtn);
+                    controls.appendChild(removeBtn);
+                    
+                    imageItem.appendChild(img);
+                    imageItem.appendChild(imageInfo);
+                    imageItem.appendChild(controls);
+                    
+                    imageList.appendChild(imageItem);
+                });
+            }
+            
+            function moveImage(index, direction) {
+                if (direction === 'up' && index > 0) {
+                    // Swap with previous item
+                    [images[index-1], images[index]] = [images[index], images[index-1]];
+                    renderImageList();
+                } else if (direction === 'down' && index < images.length - 1) {
+                    // Swap with next item
+                    [images[index+1], images[index]] = [images[index], images[index+1]];
+                    renderImageList();
+                }
+            }
+            
+            function removeImage(id) {
+                images = images.filter(image => image.id !== id);
+                renderImageList();
+            }
+            
+            function generatePdf() {
+                if (images.length === 0) {
+                    alert('Please add at least one image');
+                    return;
+                }
+                
+                const doc = new jsPDF();
+                
+                images.forEach((image, index) => {
+                    if (index > 0) {
+                        doc.addPage();
+                    }
+                    
+                    const img = new Image();
+                    img.src = image.data;
+                    
+                    // Wait for image to load
+                    img.onload = function() {
+                        // Calculate dimensions to fit the page
+                        const pageWidth = doc.internal.pageSize.getWidth();
+                        const pageHeight = doc.internal.pageSize.getHeight();
+                        
+                        const ratio = Math.min(
+                            (pageWidth - 20) / img.width, 
+                            (pageHeight - 20) / img.height
+                        );
+                        
+                        const width = img.width * ratio;
+                        const height = img.height * ratio;
+                        
+                        // Center the image on the page
+                        const x = (pageWidth - width) / 2;
+                        const y = (pageHeight - height) / 2;
+                        
+                        doc.addImage(image.data, 'JPEG', x, y, width, height);
+                        
+                        // Save after last image
+                        if (index === images.length - 1) {
+                            doc.save('images.pdf');
+                        }
+                    };
+                    
+                    // Handle case where image might already be loaded
+                    if (img.complete) {
+                        img.onload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

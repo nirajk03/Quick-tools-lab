@@ -21,24 +21,55 @@
       color: #333;
     }
 
+    /* ---------- HEADER ---------- */
     header {
       background: linear-gradient(135deg, #2196f3, #00bcd4);
       color: white;
-      padding: 40px 20px;
+      padding: 30px 20px 10px;
       text-align: center;
+      /* Removed sticky effect */
     }
 
     header h1 {
       font-size: 2.5rem;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     header p {
       font-size: 1.1rem;
       max-width: 600px;
       margin: auto;
+      margin-bottom: 20px;
     }
 
+    /* ---------- NAV BAR ---------- */
+    nav.tools-nav {
+      margin-top: 10px;
+    }
+
+    nav.tools-nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    nav.tools-nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 8px 12px;
+      transition: background 0.2s ease, color 0.2s ease;
+      border-radius: 4px;
+    }
+
+    nav.tools-nav a:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
     main {
       padding: 40px 20px;
       max-width: 1100px;
@@ -46,7 +77,8 @@
     }
 
     .category {
-      margin-bottom: 40px;
+      margin-bottom: 60px;
+      scroll-margin-top: 100px;
     }
 
     .category-title {
@@ -116,117 +148,123 @@
 </head>
 <body>
 
-<header>
-  <h1>Quick Tools Lab</h1>
-  <p>All-in-One Free Tools to Enhance Images, Convert PDFs, Make Resumes & More — Fast, Simple, and Online!</p>
-</header>
+  <!-- ========== HEADER ========== -->
+  <header>
+    <h1>Quick Tools Lab</h1>
+    <p>All‐in‐One Free Tools to Enhance Images, Convert PDFs, Make Resumes & More — Fast, Simple, and Online!</p>
 
-<main>
-  <div class="category">
-    <h2 class="category-title">Image Tools</h2>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <h2>Remove Background</h2>
-        <p>Automatically remove background from any image in seconds.</p>
-        <a href="#">Coming Soon</a>
-      </div>
+    <nav class="tools-nav">
+      <ul>
+        <li><a href="#image-tools">Image Tools</a></li>
+        <li><a href="#pdf-tools">PDF Tools</a></li>
+        <li><a href="#calculation-tools">Calculation Tools</a></li>
+        <li><a href="#other-tools">Other Tools</a></li>
+      </ul>
+    </nav>
+  </header>
 
-      <div class="tool-card">
-        <h2>Image Resizer</h2>
-        <p>Resize your images to any custom dimensions or social media size.</p>
-        <a href="#">Coming Soon</a>
-      </div>
+  <!-- ========== MAIN ========== -->
+  <main>
 
-      <div class="tool-card">
-        <h2>Image Enhancer</h2>
-        <p>Improve image quality, fix blur, and upscale resolution easily.</p>
-        <a href="#">Coming Soon</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="category">
-    <h2 class="category-title">PDF Tools</h2>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <h2>PDF Compressor</h2>
-        <p>Reduce the file size of your PDF documents without quality loss.</p>
-        <a href="pdf-compress.html">Compress</a>
-      </div>
-
-      <div class="tool-card">
-        <h2>PDF to Excel</h2>
-        <p>Convert your PDF files into editable Excel spreadsheets.</p>
-        <a href="#">Convert</a>
-      </div>
-
-      <div class="tool-card">
-      <h2>PDF to JPEG</h2>
-      <p>Convert your PDF files into high-quality JPEG images easily.</p>
-      <a href="pdf-to-jpeg-converter.html">Convert</a>
-       </div>
-
-      <div class="tool-card">
-  <h2>JPG to PDF</h2>
-  <p>Convert your JPG images into a single PDF file quickly and easily.</p>
-  <a href="convert-jpg-to-pdf.html">Convert</a>
-</div>
-     
-      <div class="tool-card">
-  <h2>PDF Password Protector</h2>
-  <p>Secure your PDF files by adding a password to prevent unauthorized access.</p>
-  <a href="pdf-password-protector.html">Protect</a>
-</div>
-
-     <div class="tool-card">
-        <h2>Excel to PDF</h2>
-        <p>Turn your Excel sheets into clean PDF documents instantly.</p>
-        <a href="#">Convert</a>
-      </div>
-      
-      <div class="tool-card">
-        <h2>Pdf Editor</h2>
-        <p>Make quick edits to your PDF files with this easy-to-use online editor.</p>
-        <a href="#">Upload & Edit</a>
+    <!-- IMAGE TOOLS SECTION -->
+    <div id="image-tools" class="category">
+      <h2 class="category-title">Image Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h2>Remove Background</h2>
+          <p>Automatically remove background from any image in seconds.</p>
+          <a href="#">Coming Soon</a>
+        </div>
+        <div class="tool-card">
+          <h2>Image Resizer</h2>
+          <p>Resize your images to any custom dimensions or social media size.</p>
+          <a href="#">Coming Soon</a>
+        </div>
+        <div class="tool-card">
+          <h2>Image Enhancer</h2>
+          <p>Improve image quality, fix blur, and upscale resolution easily.</p>
+          <a href="#">Coming Soon</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="category">
-    <h2 class="category-title">Calculation Tools</h2>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <h2>Age Calculator</h2>
-        <p>Calculate your exact age in years, months, and days.</p>
-        <a href="age-calculator.html">Calculate</a>
-      </div>
-
-      <div class="tool-card">
-        <h2>Percentage Calculator</h2>
-        <p>Find percentages quickly and easily with this smart calculator.</p>
-        <a href="parcentage-calculator.html">Calculate</a>
+    <!-- PDF TOOLS SECTION -->
+    <div id="pdf-tools" class="category">
+      <h2 class="category-title">PDF Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h2>PDF Compressor</h2>
+          <p>Reduce the file size of your PDF documents without quality loss.</p>
+          <a href="pdf-compress.html">Compress</a>
+        </div>
+        <div class="tool-card">
+          <h2>PDF to Excel</h2>
+          <p>Convert your PDF files into editable Excel spreadsheets.</p>
+          <a href="#">Convert</a>
+        </div>
+        <div class="tool-card">
+          <h2>PDF to JPEG</h2>
+          <p>Convert your PDF files into high-quality JPEG images easily.</p>
+          <a href="pdf-to-jpeg-converter.html">Convert</a>
+        </div>
+        <div class="tool-card">
+          <h2>JPG to PDF</h2>
+          <p>Convert your JPG images into a single PDF file quickly and easily.</p>
+          <a href="convert-jpg-to-pdf.html">Convert</a>
+        </div>
+        <div class="tool-card">
+          <h2>PDF Password Protector</h2>
+          <p>Secure your PDF files by adding a password to prevent unauthorized access.</p>
+          <a href="pdf-password-protector.html">Protect</a>
+        </div>
+        <div class="tool-card">
+          <h2>Excel to PDF</h2>
+          <p>Turn your Excel sheets into clean PDF documents instantly.</p>
+          <a href="#">Convert</a>
+        </div>
+        <div class="tool-card">
+          <h2>PDF Editor</h2>
+          <p>Make quick edits to your PDF files with this easy-to-use online editor.</p>
+          <a href="#">Upload & Edit</a>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div class="category">
-    <h2 class="category-title">Other Tools</h2>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <h2>Resume Maker</h2>
-        <p>Create professional resumes online with simple templates.</p>
-        <a href="#">Create</a>
+
+    <!-- CALCULATION TOOLS SECTION -->
+    <div id="calculation-tools" class="category">
+      <h2 class="category-title">Calculation Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h2>Age Calculator</h2>
+          <p>Calculate your exact age in years, months, and days.</p>
+          <a href="age-calculator.html">Calculate</a>
+        </div>
+        <div class="tool-card">
+          <h2>Percentage Calculator</h2>
+          <p>Find percentages quickly and easily with this smart calculator.</p>
+          <a href="parcentage-calculator.html">Calculate</a>
+        </div>
       </div>
-    
-    
-    <div class="tool-card">
-      <h2>QR Code Generator</h2>
-      <p>Generate QR codes from text, URLs, or other content instantly.</p>
-      <a href="qr-code-generator.html">Generate</a>
     </div>
-  </div>
-</div>
-</main>
+
+    <!-- OTHER TOOLS SECTION -->
+    <div id="other-tools" class="category">
+      <h2 class="category-title">Other Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h2>Resume Maker</h2>
+          <p>Create professional resumes online with simple templates.</p>
+          <a href="#">Create</a>
+        </div>
+        <div class="tool-card">
+          <h2>QR Code Generator</h2>
+          <p>Generate QR codes from text, URLs, or other content instantly.</p>
+          <a href="qr-code-generator.html">Generate</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
 
 </body>
 </html>

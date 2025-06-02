@@ -3,115 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to PDF Converter</title>
+    <title>Modern Image to PDF Converter</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
             padding: 20px;
-            background-color: #f5f5f5;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
         }
 
-        h1, h2 {
-            color: #333;
+        h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1rem;
         }
 
         .controls {
-            margin: 20px 0;
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 16px;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 15px;
         }
 
-        button:hover {
-            background: #45a049;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        #previewArea {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .image-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
         }
 
         #imageList {
-            margin-top: 20px;
+            display: grid;
+            gap: 15px;
         }
 
         .image-item {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .image-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
             margin-right: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border);
         }
 
         .image-info {
             flex-grow: 1;
         }
 
+        .image-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
         .image-controls {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            gap: 10px;
         }
 
-        .image-controls button {
-            padding: 5px 10px;
-            font-size: 14px;
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: var(--light);
+            color: var(--dark);
         }
 
-        .remove-btn {
-            background: #f44336;
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
         }
 
-        .remove-btn:hover {
-            background: #d32f2f;
+        .control-btn.danger {
+            background: var(--danger);
+            color: white;
         }
 
-        .file-input-container {
+        .control-btn.danger:hover {
+            background: #e5177b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--border);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.03);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--primary);
             margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .image-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .image-preview {
+                margin-right: 0;
+                margin-bottom: 15px;
+                width: 100%;
+                height: auto;
+                max-height: 150px;
+            }
+            
+            .image-controls {
+                margin-top: 15px;
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Image to PDF Converter</h1>
-        <p>Upload JPEG/PNG images to create a PDF</p>
+        <p class="subtitle">Upload multiple images and convert them to a single PDF document</p>
         
         <div class="controls">
-            <button id="addImageBtn">Add Image</button>
-            <button id="generatePdfBtn">Generate PDF</button>
+            <button id="addImageBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Images
+            </button>
+            <button id="generatePdfBtn" class="btn btn-primary">
+                <i class="fas fa-file-pdf"></i> Generate PDF
+            </button>
+        </div>
+        
+        <div class="upload-area" id="dropArea">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>Drag & Drop Images Here</h3>
+            <p>or click "Add Images" to browse files</p>
         </div>
         
         <div id="imageInputs"></div>
         
         <div id="previewArea">
-            <h2>Preview & Order</h2>
-            <div id="imageList"></div>
+            <div class="preview-header">
+                <div class="preview-title">Selected Images</div>
+                <div class="image-count" id="imageCount">0 images</div>
+            </div>
+            
+            <div id="imageList">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="far fa-images"></i>
+                    </div>
+                    <h3>No images selected</h3>
+                    <p>Add images using the button above or drag and drop</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -124,50 +316,84 @@
             const imageList = document.getElementById('imageList');
             const addImageBtn = document.getElementById('addImageBtn');
             const generatePdfBtn = document.getElementById('generatePdfBtn');
+            const dropArea = document.getElementById('dropArea');
+            const imageCount = document.getElementById('imageCount');
             
             let images = [];
             
-            // Add initial file input
-            addImageBtn.addEventListener('click', addImageInput);
+            // Add image input
+            addImageBtn.addEventListener('click', triggerFileInput);
             
             // Generate PDF button
             generatePdfBtn.addEventListener('click', generatePdf);
             
-            // Add the first input field
-            addImageInput();
-            
-            function addImageInput() {
-                const inputContainer = document.createElement('div');
-                inputContainer.className = 'file-input-container';
-                
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.classList.add('drag-over');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('drag-over');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            function triggerFileInput() {
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
                 fileInput.accept = 'image/jpeg,image/png';
-                fileInput.className = 'file-input';
+                fileInput.multiple = true;
+                fileInput.style.display = 'none';
                 
                 fileInput.addEventListener('change', function(e) {
-                    if (e.target.files && e.target.files[0]) {
-                        const file = e.target.files[0];
-                        if (!file.type.match('image.*')) {
-                            alert('Please select an image file (JPEG/PNG)');
-                            return;
-                        }
-                        
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            addImageToList(event.target.result, file.name);
-                            inputContainer.remove();
-                        };
-                        reader.readAsDataURL(file);
+                    if (e.target.files && e.target.files.length > 0) {
+                        handleFiles(e.target.files);
                     }
                 });
                 
-                inputContainer.appendChild(fileInput);
-                imageInputsContainer.appendChild(inputContainer);
+                document.body.appendChild(fileInput);
+                fileInput.click();
+                document.body.removeChild(fileInput);
+            }
+            
+            function handleFiles(files) {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (!file.type.match('image.*')) continue;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        addImageToList(event.target.result, file.name);
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
             
             function addImageToList(imageData, filename) {
-                const imageId = Date.now();
+                const imageId = Date.now() + Math.random().toString(36).substr(2, 9);
                 
                 images.push({
                     id: imageId,
@@ -179,7 +405,22 @@
             }
             
             function renderImageList() {
+                if (images.length === 0) {
+                    imageList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="far fa-images"></i>
+                            </div>
+                            <h3>No images selected</h3>
+                            <p>Add images using the button above or drag and drop</p>
+                        </div>
+                    `;
+                    imageCount.textContent = '0 images';
+                    return;
+                }
+                
                 imageList.innerHTML = '';
+                imageCount.textContent = `${images.length} ${images.length === 1 ? 'image' : 'images'}`;
                 
                 images.forEach((image, index) => {
                     const imageItem = document.createElement('div');
@@ -190,33 +431,54 @@
                     img.src = image.data;
                     img.className = 'image-preview';
                     img.alt = image.name;
+                    img.loading = 'lazy';
                     
-                    const imageInfo = document.createElement('div');
-                    imageInfo.className = 'image-info';
-                    imageInfo.textContent = image.name;
+                    const imageDetails = document.createElement('div');
+                    imageDetails.className = 'image-info';
+                    
+                    const imageName = document.createElement('div');
+                    imageName.className = 'image-name';
+                    imageName.textContent = image.name;
+                    imageName.title = image.name;
+                    
+                    imageDetails.appendChild(imageName);
                     
                     const controls = document.createElement('div');
                     controls.className = 'image-controls';
                     
                     const upBtn = document.createElement('button');
-                    upBtn.textContent = '↑';
-                    upBtn.addEventListener('click', () => moveImage(index, 'up'));
+                    upBtn.className = 'control-btn';
+                    upBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+                    upBtn.title = 'Move up';
+                    upBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        moveImage(index, 'up');
+                    });
                     
                     const downBtn = document.createElement('button');
-                    downBtn.textContent = '↓';
-                    downBtn.addEventListener('click', () => moveImage(index, 'down'));
+                    downBtn.className = 'control-btn';
+                    downBtn.innerHTML = '<i class="fas fa-arrow-down"></i>';
+                    downBtn.title = 'Move down';
+                    downBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        moveImage(index, 'down');
+                    });
                     
                     const removeBtn = document.createElement('button');
-                    removeBtn.textContent = 'Remove';
-                    removeBtn.className = 'remove-btn';
-                    removeBtn.addEventListener('click', () => removeImage(image.id));
+                    removeBtn.className = 'control-btn danger';
+                    removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                    removeBtn.title = 'Remove';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeImage(image.id);
+                    });
                     
                     controls.appendChild(upBtn);
                     controls.appendChild(downBtn);
                     controls.appendChild(removeBtn);
                     
                     imageItem.appendChild(img);
-                    imageItem.appendChild(imageInfo);
+                    imageItem.appendChild(imageDetails);
                     imageItem.appendChild(controls);
                     
                     imageList.appendChild(imageItem);
@@ -225,11 +487,9 @@
             
             function moveImage(index, direction) {
                 if (direction === 'up' && index > 0) {
-                    // Swap with previous item
                     [images[index-1], images[index]] = [images[index], images[index-1]];
                     renderImageList();
                 } else if (direction === 'down' && index < images.length - 1) {
-                    // Swap with next item
                     [images[index+1], images[index]] = [images[index], images[index+1]];
                     renderImageList();
                 }
@@ -240,53 +500,77 @@
                 renderImageList();
             }
             
-            function generatePdf() {
+            async function generatePdf() {
                 if (images.length === 0) {
                     alert('Please add at least one image');
                     return;
                 }
                 
                 const doc = new jsPDF();
+                let pageAdded = false;
                 
-                images.forEach((image, index) => {
-                    if (index > 0) {
-                        doc.addPage();
+                // Show loading state
+                generatePdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating PDF...';
+                generatePdfBtn.disabled = true;
+                
+                try {
+                    for (let i = 0; i < images.length; i++) {
+                        const image = images[i];
+                        
+                        await new Promise((resolve) => {
+                            const img = new Image();
+                            img.src = image.data;
+                            
+                            img.onload = function() {
+                                if (pageAdded) {
+                                    doc.addPage();
+                                } else {
+                                    pageAdded = true;
+                                }
+                                
+                                const pageWidth = doc.internal.pageSize.getWidth();
+                                const pageHeight = doc.internal.pageSize.getHeight();
+                                const margin = 20;
+                                const maxWidth = pageWidth - margin * 2;
+                                const maxHeight = pageHeight - margin * 2;
+                                
+                                let width = img.width;
+                                let height = img.height;
+                                const aspectRatio = width / height;
+                                
+                                if (width > maxWidth) {
+                                    width = maxWidth;
+                                    height = width / aspectRatio;
+                                }
+                                
+                                if (height > maxHeight) {
+                                    height = maxHeight;
+                                    width = height * aspectRatio;
+                                }
+                                
+                                const x = (pageWidth - width) / 2;
+                                const y = (pageHeight - height) / 2;
+                                
+                                doc.addImage(image.data, 'JPEG', x, y, width, height);
+                                resolve();
+                            };
+                            
+                            img.onerror = function() {
+                                console.error('Error loading image:', image.name);
+                                resolve();
+                            };
+                        });
                     }
                     
-                    const img = new Image();
-                    img.src = image.data;
+                    doc.save('images.pdf');
                     
-                    // Wait for image to load
-                    img.onload = function() {
-                        // Calculate dimensions to fit the page
-                        const pageWidth = doc.internal.pageSize.getWidth();
-                        const pageHeight = doc.internal.pageSize.getHeight();
-                        
-                        const ratio = Math.min(
-                            (pageWidth - 20) / img.width, 
-                            (pageHeight - 20) / img.height
-                        );
-                        
-                        const width = img.width * ratio;
-                        const height = img.height * ratio;
-                        
-                        // Center the image on the page
-                        const x = (pageWidth - width) / 2;
-                        const y = (pageHeight - height) / 2;
-                        
-                        doc.addImage(image.data, 'JPEG', x, y, width, height);
-                        
-                        // Save after last image
-                        if (index === images.length - 1) {
-                            doc.save('images.pdf');
-                        }
-                    };
-                    
-                    // Handle case where image might already be loaded
-                    if (img.complete) {
-                        img.onload();
-                    }
-                });
+                } catch (error) {
+                    console.error('PDF generation error:', error);
+                    alert('Error generating PDF');
+                } finally {
+                    generatePdfBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Generate PDF';
+                    generatePdfBtn.disabled = false;
+                }
             }
         });
     </script>

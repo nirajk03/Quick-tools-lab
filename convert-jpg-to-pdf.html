@@ -1,373 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick Tools Lab - Header</title>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    .logo span:first-child {
-      color: #1e88e5;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 25px;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: #1e88e5;
-    }
-
-    .email {
-      display: flex;
-      align-items: center;
-      font-size: 0.95rem;
-      color: #333;
-    }
-
-    .email i {
-      color: #1e88e5;
-      margin-right: 6px;
-    }
-
-    /* Responsive for mobile */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-
-      .email {
-        display: none;
-      }
-
-      .logo {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <header class="header">
-    <div class="logo">
-      <span>Quick</span><span> Tools Lab</span>
-    </div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#">All Tools</a>
-      <a href="contact.html">Contact Us</a>
-      <a href="privacy-policy.html">Privacy Policy</a>
-      <a href="terms.html">Terms & Conditions</a>
-      <a href="about.html">About Us</a>
-    </nav>
-    <div class="email">
-      <i class="fas fa-envelope"></i>
-      quicktoolslab@gmail.com
-    </div>
-  </header>
-
-</body>
-</html>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Age Calculator</title>
-    <!-- Font Awesome for Home Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kNV+XU1Vn8t6R6W7E5Y5qzY9n3aK5R1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* Main Container Styles */
-        .age-calculator-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 25px;
-            background: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
-
-        /* Heading Styles */
-        .age-calculator-container h2 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 24px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-
-        /* Input Section Styles */
-        .input-section {
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #34495e;
-            font-weight: 600;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-
-        /* Button Styles */
-        .calculate-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: 600;
-        }
-
-        .calculate-btn:hover {
-            background-color: #2980b9;
-        }
-
-        /* Results Section Styles */
-        .results {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #e8f4fc;
-            border-radius: 5px;
-            display: none;
-        }
-
-        .results h3 {
-            color: #2c3e50;
-            margin-top: 0;
-            text-align: center;
-            font-size: 20px;
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #d6eaf8;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-label {
-            font-weight: 600;
-            color: #34495e;
-        }
-
-        .result-value {
-            color: #3498db;
-            font-weight: 600;
-        }
-
-        /* Home Button Styles */
-        .home-btn-container {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .home-btn-container a {
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            background-color: #4285f4;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .home-btn-container a:hover {
-            background-color: #3367d6;
-        }
-
-        .home-btn-container i {
-            margin-right: 8px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .age-calculator-container {
-                padding: 15px;
-                margin: 15px;
-            }
-
-            .age-calculator-container h2 {
-                font-size: 20px;
-            }
-
-            .input-group input {
-                padding: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Home Button -->
-    <div class="home-btn-container">
-        <a href="index.html">
-            <i class="fas fa-home"></i>
-            Home
-        </a>
-    </div>
-
-    <!-- Age Calculator -->
-    <div class="age-calculator-container">
-        <h2>Age Calculator</h2>
-
-        <div class="input-section">
-            <div class="input-group">
-                <label for="birth-date">Date of Birth:</label>
-                <input type="date" id="birth-date" required>
-            </div>
-
-            <div class="input-group">
-                <label for="current-date">Current Date (optional):</label>
-                <input type="date" id="current-date">
-            </div>
-        </div>
-
-        <button class="calculate-btn" onclick="calculateAge()">Calculate Age</button>
-
-        <div class="results" id="results">
-            <h3>Your Age Details</h3>
-            <div class="result-item">
-                <span class="result-label">Years:</span>
-                <span class="result-value" id="years">--</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Months:</span>
-                <span class="result-value" id="months">--</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Days:</span>
-                <span class="result-value" id="days">--</span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Total Days:</span>
-                <span class="result-value" id="total-days">--</span>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function calculateAge() {
-            const birthDateInput = document.getElementById('birth-date');
-            const currentDateInput = document.getElementById('current-date');
-
-            if (!birthDateInput.value) {
-                alert('Please enter your date of birth');
-                return;
-            }
-
-            const birthDate = new Date(birthDateInput.value);
-            const currentDate = currentDateInput.value ? new Date(currentDateInput.value) : new Date();
-
-            if (birthDate > currentDate) {
-                alert('Birth date cannot be in the future');
-                return;
-            }
-
-            let years = currentDate.getFullYear() - birthDate.getFullYear();
-            let months = currentDate.getMonth() - birthDate.getMonth();
-            let days = currentDate.getDate() - birthDate.getDate();
-
-            if (days < 0) {
-                months--;
-                const lastDayOfMonth = new Date(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    0
-                ).getDate();
-                days += lastDayOfMonth;
-            }
-
-            if (months < 0) {
-                years--;
-                months += 12;
-            }
-
-            const timeDiff = currentDate - birthDate;
-            const totalDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-            document.getElementById('years').textContent = years;
-            document.getElementById('months').textContent = months;
-            document.getElementById('days').textContent = days;
-            document.getElementById('total-days').textContent = totalDays;
-
-            document.getElementById('results').style.display = 'block';
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('current-date').value = today;
-        });
-    </script>
-  
-</body>
-</html>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Image to PDF Converter</title>
@@ -385,6 +18,7 @@
             --gray: #6c757d;
             --border: #dee2e6;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --sky-blue: #38b6ff; /* Added sky blue color */
         }
 
         * {
@@ -393,14 +27,62 @@
             box-sizing: border-box;
         }
 
+        /* Fixed Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--sky-blue); /* Sky blue color */
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f2f5;
             color: var(--dark);
             line-height: 1.6;
-            padding: 20px;
+            padding-top: 80px; /* Added padding to account for fixed header */
         }
 
+        /* Rest of your existing CSS remains the same */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -408,6 +90,7 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: var(--shadow);
+            margin-top: 20px;
         }
 
         h1 {
@@ -633,6 +316,16 @@
     </style>
 </head>
 <body>
+    <!-- Fixed Sky Blue Header -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='#'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">All Tools</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
     <div class="container">
         <h1>Image to PDF Converter</h1>
         <p class="subtitle">Upload multiple images and convert them to a single PDF document</p>
@@ -693,6 +386,8 @@
             
             // Generate PDF button
             generatePdfBtn.addEventListener('click', generatePdf);
+            
+            // Make logo clickable (already handled in HTML with onclick)
             
             // Drag and drop functionality
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -941,6 +636,5 @@
             }
         });
     </script>
-   
 </body>
 </html>

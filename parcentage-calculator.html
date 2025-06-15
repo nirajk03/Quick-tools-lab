@@ -4,35 +4,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Advanced Percentage Calculator</title>
-  <!-- Font Awesome for Home Icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kNV+XU1Vn8t6R6W7E5Y5qzY9n3aK5R1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Google Font + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Reset & Base */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --dark: #212529;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
       line-height: 1.6;
       color: #333;
       background: #f5f5f5;
-      padding: 10px;
+      padding-top: 80px; /* For fixed header */
     }
+
+    /* Simplified Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #fff;
+      color: var(--dark);
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      transition: transform .3s;
+    }
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+    .nav-links a {
+      color: var(--dark);
+      text-decoration: none;
+      font-size: 16px;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: all .3s;
+    }
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Calculator Styles */
     .container {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 20px auto;
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
       border: 1px solid #e0e0e0;
       overflow: hidden;
     }
-    /* Header */
-    .header {
+
+    .calculator-header {
       display: flex;
       align-items: center;
       padding: 15px;
       background: #fff;
       border-bottom: 1px solid #e0e0e0;
     }
+
     .home-btn {
       display: inline-flex;
       align-items: center;
@@ -46,7 +101,11 @@
       transition: background 0.3s;
       margin-right: 15px;
     }
-    .home-btn:hover { background: linear-gradient(135deg, #1e88e5, #00acc1); }
+
+    .home-btn:hover { 
+      background: linear-gradient(135deg, #1e88e5, #00acc1); 
+    }
+
     .calculator-title {
       font-size: 1.5rem;
       color: #2c3e50;
@@ -56,9 +115,11 @@
       flex-grow: 1;
       text-align: center;
     }
+
     .calculator {
       padding: 20px;
     }
+
     /* Tabs */
     .tab-nav {
       display: flex;
@@ -68,6 +129,7 @@
       margin-bottom: 15px;
       overflow-x: auto;
     }
+
     .tab-btn {
       flex: 1;
       padding: 10px;
@@ -80,20 +142,33 @@
       transition: background 0.3s;
       min-width: 100px;
     }
+
     .tab-btn.active {
       background: #fff;
       color: #3498db;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .calculator-form { display: none; }
-    .calculator-form.active { display: block; animation: fadeIn 0.3s ease; }
-    .input-group { margin-bottom: 15px; }
+
+    .calculator-form { 
+      display: none; 
+    }
+
+    .calculator-form.active { 
+      display: block; 
+      animation: fadeIn 0.3s ease; 
+    }
+
+    .input-group { 
+      margin-bottom: 15px; 
+    }
+
     .input-group label {
       display: block;
       margin-bottom: 5px;
       color: #34495e;
       font-weight: 600;
     }
+
     .input-group input {
       width: 100%;
       padding: 12px;
@@ -102,12 +177,14 @@
       background: #f8f9fa;
       transition: all 0.3s;
     }
+
     .input-group input:focus {
       background: #fff;
       border-color: #3498db;
       box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
       outline: none;
     }
+
     .calculate-btn {
       width: 100%;
       padding: 12px;
@@ -120,7 +197,11 @@
       box-shadow: 0 3px 8px rgba(52,152,219,0.2);
       transition: transform 0.1s;
     }
-    .calculate-btn:active { transform: translateY(1px); }
+
+    .calculate-btn:active { 
+      transform: translateY(1px); 
+    }
+
     .results {
       margin-top: 20px;
       background: #f8f9fa;
@@ -129,27 +210,58 @@
       display: none;
       animation: slideUp 0.3s ease;
     }
+
     .results h3 {
       text-align: center;
       margin-bottom: 10px;
       color: #2c3e50;
     }
+
     .result-item {
       display: flex;
       justify-content: space-between;
       padding: 8px 0;
       border-bottom: 1px solid #e0e0e0;
     }
-    .result-item:last-child { border-bottom: none; }
-    .result-label { font-weight: 600; color: #34495e; }
-    .result-value { font-weight: 700; color: #e74c3c; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .result-item:last-child { 
+      border-bottom: none; 
+    }
+
+    .result-label { 
+      font-weight: 600; 
+      color: #34495e; 
+    }
+
+    .result-value { 
+      font-weight: 700; 
+      color: #e74c3c; 
+    }
+
+    @keyframes fadeIn { 
+      from { opacity: 0; } 
+      to { opacity: 1; } 
+    }
+
+    @keyframes slideUp { 
+      from { opacity: 0; transform: translateY(10px); } 
+      to { opacity: 1; transform: translateY(0); } 
+    }
   </style>
 </head>
 <body>
+  <!-- Simplified Fixed Header -->
+  <header class="header">
+    <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html">All Tools</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
   <div class="container">
-    <div class="header">
+    <div class="calculator-header">
       <a href="https://quicktoolslab.blogspot.com/" class="home-btn">
         <i class="fas fa-home"></i> Home
       </a>
@@ -245,6 +357,5 @@
       document.getElementById('result3').style.display = 'block';
     }
   </script>
-  
 </body>
 </html>

@@ -1,116 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick Tools Lab - Header</title>
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    .logo span:first-child {
-      color: #1e88e5;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 25px;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: #1e88e5;
-    }
-
-    .email {
-      display: flex;
-      align-items: center;
-      font-size: 0.95rem;
-      color: #333;
-    }
-
-    .email i {
-      color: #1e88e5;
-      margin-right: 6px;
-    }
-
-    /* Responsive for mobile */
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-
-      .email {
-        display: none;
-      }
-
-      .logo {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <header class="header">
-    <div class="logo">
-      <span>Quick</span><span> Tools Lab</span>
-    </div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="#">All Tools</a>
-      <a href="contact.html">Contact Us</a>
-      <a href="privacy-policy.html">Privacy Policy</a>
-      <a href="terms.html">Terms & Conditions</a>
-      <a href="about.html">About Us</a>
-    </nav>
-    <div class="email">
-      <i class="fas fa-envelope"></i>
-      quicktoolslab@gmail.com
-    </div>
-  </header>
-
-</body>
-</html>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Age Calculator</title>
-    <!-- Font Awesome for Home Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/kNV+XU1Vn8t6R6W7E5Y5qzY9n3aK5R1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0fV1p5P3pZ1j0Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Font + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Main Container Styles */
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --dark: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body with padding for fixed header */
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-top: 80px; /* Same as header height */
+        }
+
+        /* Simplified Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            color: var(--dark);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, .1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all .3s;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Age Calculator Styles */
         .age-calculator-container {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 500px;
@@ -122,7 +79,6 @@
             border: 1px solid #e0e0e0;
         }
 
-        /* Heading Styles */
         .age-calculator-container h2 {
             color: #2c3e50;
             text-align: center;
@@ -132,7 +88,6 @@
             padding-bottom: 10px;
         }
 
-        /* Input Section Styles */
         .input-section {
             margin-bottom: 20px;
         }
@@ -162,7 +117,6 @@
             outline: none;
         }
 
-        /* Button Styles */
         .calculate-btn {
             background-color: #3498db;
             color: white;
@@ -180,7 +134,6 @@
             background-color: #2980b9;
         }
 
-        /* Results Section Styles */
         .results {
             margin-top: 25px;
             padding: 15px;
@@ -217,7 +170,6 @@
             font-weight: 600;
         }
 
-        /* Home Button Styles */
         .home-btn-container {
             text-align: center;
             margin: 20px 0;
@@ -243,7 +195,6 @@
             margin-right: 8px;
         }
 
-        /* Responsive Design */
         @media (max-width: 600px) {
             .age-calculator-container {
                 padding: 15px;
@@ -261,6 +212,16 @@
     </style>
 </head>
 <body>
+    <!-- Simplified Header -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html">All Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
     <!-- Home Button -->
     <div class="home-btn-container">
         <a href="index.html">
@@ -361,6 +322,5 @@
             document.getElementById('current-date').value = today;
         });
     </script>
-  
 </body>
 </html>

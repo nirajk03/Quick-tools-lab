@@ -5,8 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Free online tool to convert PDF pages to high-quality JPEG images. No file uploads to server - processing happens in your browser.">
     <title>PDF to JPEG Converter | Extract Pages as Images</title>
+    <!-- Google Font + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Base Styles */
+        /* Header Styles */
+        :root {
+            --header-primary: #4361ee;
+            --header-primary-dark: #3a56d4;
+            --header-dark: #212529;
+        }
+
+        /* Body padding for fixed header */
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-top: 70px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            color: var(--header-dark);
+            padding: 10px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--header-primary);
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-links a {
+            color: var(--header-dark);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            transition: all .3s;
+        }
+        .nav-links a:hover {
+            color: var(--header-primary);
+        }
+
+        /* Main Content Styles */
         :root {
             --primary: #4a6bff;
             --primary-dark: #3a56cc;
@@ -16,19 +75,16 @@
             --error: #e74c3c;
         }
         
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
+        main {
             max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 20px auto 0;
+            padding: 0 20px;
         }
         
         h1 {
             color: var(--primary);
             text-align: center;
-            margin-bottom: 10px;
+            margin: 15px 0 10px;
         }
         
         .subtitle {
@@ -166,10 +222,56 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* Footer */
+        footer {
+            background: #1e88e5;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            max-width: 1100px;
+            margin: auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             body {
-                padding: 15px;
+                padding: 0 15px;
+                padding-top: 60px;
+            }
+            
+            .header {
+                padding: 8px 15px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+            
+            .nav-links {
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                font-size: 13px;
+                padding: 4px 6px;
             }
             
             .upload-container {
@@ -179,16 +281,32 @@
             .page-previews {
                 grid-template-columns: 1fr;
             }
+            
+            main {
+                padding: 0 10px;
+            }
+            
+            .footer-links {
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>PDF to JPEG Converter</h1>
-        <p class="subtitle">Convert each page of your PDF to high-quality JPEG images</p>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html">All&nbsp;Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
     </header>
     
     <main>
+        <h1>PDF to JPEG Converter</h1>
+        <p class="subtitle">Convert each page of your PDF to high-quality JPEG images</p>
+        
         <div class="upload-container" id="dropArea">
             <div class="upload-icon">📄</div>
             <h2>Upload PDF File</h2>
@@ -210,6 +328,24 @@
             <div class="page-previews" id="pagePreviews"></div>
         </div>
     </main>
+    
+    <footer>
+        <div class="footer-content">
+            <h2 style="margin-bottom: 10px; font-size: 1.6rem;">Quick Tools Lab</h2>
+            <p style="margin-bottom: 20px; font-size: 1rem;">All-in-one free tools for your image, PDF, and calculation needs</p>
+
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="#">All Tools</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="about.html">About Us</a>
+            </div>
+
+            <p style="font-size: 0.9rem;">© 2025 <strong>Quick Tools Lab</strong>. All rights reserved.</p>
+        </div>
+    </footer>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
     <script>
@@ -408,22 +544,5 @@
             status.textContent = '';
         }
     </script>
-    <footer style="background: #1e88e5; color: white; padding: 30px 20px; text-align: center; margin-top: 40px;">
-  <div style="max-width: 1100px; margin: auto;">
-    <h2 style="margin-bottom: 10px; font-size: 1.6rem;">Quick Tools Lab</h2>
-    <p style="margin-bottom: 20px; font-size: 1rem;">All-in-one free tools for your image, PDF, and calculation needs</p>
-
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-bottom: 20px;">
-      <a href="index.html" style="color: white; text-decoration: none; font-weight: 600;">Home</a>
-      <a href="#" style="color: white; text-decoration: none; font-weight: 600;">All Tools</a>
-      <a href="contact.html" style="color: white; text-decoration: none; font-weight: 600;">Contact Us</a>
-      <a href="privacy-policy.html" style="color: white; text-decoration: none; font-weight: 600;">Privacy Policy</a>
-      <a href="terms.html" style="color: white; text-decoration: none; font-weight: 600;">Terms & Conditions</a>
-      <a href="about.html" style="color: white; text-decoration: none; font-weight: 600;">About Us</a>
-    </div>
-
-    <p style="font-size: 0.9rem;">© 2025 <strong>Quick Tools Lab</strong>. All rights reserved.</p>
-  </div>
-</footer>
 </body>
 </html>

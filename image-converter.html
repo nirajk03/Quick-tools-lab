@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter</title>
+    <!-- Google Font + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Header Styles --- */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #ddd;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --header-primary: #4361ee;
+            --header-dark: #212529;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            color: var(--header-dark);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--header-primary);
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: var(--header-dark);
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all .3s;
+        }
+        .nav-links a:hover {
+            color: var(--header-primary);
+        }
+
+        /* --- Main Container --- */
+        .container {
+            background-color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        /* --- Form Elements --- */
+        .control-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        input[type="file"]::file-selector-button {
+            margin-right: 10px;
+            padding: 8px 12px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            background-color: #fdfdfd;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        /* --- JPEG Quality Slider --- */
+        #qualityControl {
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        #qualityControl.visible {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 20px;
+        }
+
+        #qualitySlider {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        #qualityValue {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* --- Button --- */
+        #convertBtn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+
+        #convertBtn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        #convertBtn:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+        
+        #convertBtn:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        /* --- Status Message --- */
+        #status {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+        .status-success { color: var(--success-color); }
+        .status-error { color: var(--error-color); }
+        .status-processing { color: var(--primary-color); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html">All Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>Image Converter</h1>
+            <p>Convert your images to JPG, PNG, or WebP right in your browser.</p>
+        </header>
+        
+        <main>
+            <div class="control-group">
+                <label for="imageInput">1. Choose an Image</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+
+            <div class="control-group">
+                <label for="formatSelect">2. Select Output Format</label>
+                <select id="formatSelect">
+                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG</option>
+                    <option value="webp">WebP</option>
+                </select>
+            </div>
+
+            <div id="qualityControl">
+                <label for="qualitySlider">JPEG Quality: <span id="qualityValue">0.9</span></label>
+                <input type="range" id="qualitySlider" min="0.1" max="1.0" step="0.05" value="0.9">
+            </div>
+
+            <button id="convertBtn">3. Convert & Download</button>
+
+            <p id="status"></p>
+        </main>
+    </div>
+
+    <!-- Hidden canvas for processing the image -->
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        // --- DOM Element References ---
+        const imageInput = document.getElementById('imageInput');
+        const formatSelect = document.getElementById('formatSelect');
+        const convertBtn = document.getElementById('convertBtn');
+        const status = document.getElementById('status');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const qualityControl = document.getElementById('qualityControl');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValue = document.getElementById('qualityValue');
+
+        // --- Event Listeners ---
+
+        // Show/hide JPEG quality slider based on selected format
+        formatSelect.addEventListener('change', () => {
+            if (formatSelect.value === 'jpeg') {
+                qualityControl.classList.add('visible');
+            } else {
+                qualityControl.classList.remove('visible');
+            }
+        });
+        
+        // Update quality value display when slider is moved
+        qualitySlider.addEventListener('input', () => {
+            qualityValue.textContent = qualitySlider.value;
+        });
+
+        // Trigger conversion on button click
+        convertBtn.addEventListener('click', () => {
+            // 1. Validation
+            if (!imageInput.files || imageInput.files.length === 0) {
+                updateStatus('Please choose an image file first.', 'error');
+                return;
+            }
+
+            const file = imageInput.files[0];
+            const reader = new FileReader();
+            
+            // Disable button during processing
+            convertBtn.disabled = true;
+            updateStatus('Processing your image...', 'processing');
+
+            // 2. Read the file
+            reader.onload = function(event) {
+                const img = new Image();
+                
+                // 3. Load image data
+                img.onload = function() {
+                    // Set canvas dimensions to match the image
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // Draw the image onto the canvas
+                    ctx.drawImage(img, 0, 0);
+
+                    // 4. Convert the image
+                    const format = formatSelect.value;
+                    const mimeType = 'image/' + format;
+                    
+                    // Handle JPEG quality
+                    let imageDataURL;
+                    if (format === 'jpeg') {
+                        const quality = parseFloat(qualitySlider.value);
+                        imageDataURL = canvas.toDataURL(mimeType, quality);
+                    } else {
+                        imageDataURL = canvas.toDataURL(mimeType);
+                    }
+
+                    // 5. Trigger download
+                    downloadImage(imageDataURL, file.name, format);
+                    updateStatus('Conversion successful! Download started.', 'success');
+                    convertBtn.disabled = false;
+                };
+                
+                img.onerror = function() {
+                    updateStatus('Could not load the image. Please try another file.', 'error');
+                    convertBtn.disabled = false;
+                }
+                
+                img.src = event.target.result;
+            };
+
+            reader.onerror = function() {
+                updateStatus('Error reading the file.', 'error');
+                convertBtn.disabled = false;
+            };
+
+            reader.readAsDataURL(file);
+        });
+        
+        // --- Helper Functions ---
+
+        /**
+         * Creates a link and triggers a download.
+         * @param {string} dataUrl - The base64 data URL of the image.
+         * @param {string} originalFilename - The original filename to create a new one.
+         * @param {string} newExtension - The new file extension (e.g., 'jpeg', 'png').
+         */
+        function downloadImage(dataUrl, originalFilename, newExtension) {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = getNewFilename(originalFilename, newExtension);
+            
+            // Append, click, and remove the link
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * Generates a new filename with the correct extension.
+         * @param {string} originalName - The original filename.
+         * @param {string} newExtension - The new file extension.
+         * @returns {string} - The new filename.
+         */
+        function getNewFilename(originalName, newExtension) {
+            const baseName = originalName.substring(0, originalName.lastIndexOf('.'));
+            return `${baseName}-converted.${newExtension}`;
+        }
+        
+        /**
+         * Updates the status message with text and a color-coded class.
+         * @param {string} message - The text to display.
+         * @param {string} type - 'success', 'error', or 'processing'.
+         */
+        function updateStatus(message, type) {
+            status.textContent = message;
+            status.className = ''; // Reset classes
+            if (type) {
+                status.classList.add(`status-${type}`);
+            }
+        }
+        
+        // Initialize JPEG quality slider visibility on page load
+        if (formatSelect.value === 'jpeg') {
+            qualityControl.classList.add('visible');
+        }
+    </script>
+</body>
+</html>

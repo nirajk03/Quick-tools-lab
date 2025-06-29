@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image & PDF Merger Tool</title>
+
+    <!-- Bootstrap 5 CSS for styling and mobile-friendliness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons for UI elements -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- The core PDF manipulation library -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --dark: #212529;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            padding-top: 80px; /* Space for fixed header */
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            color: var(--dark);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all .3s;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Content Styles */
+        .container {
+            max-width: 800px;
+        }
+        #drop-zone {
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            padding: 50px;
+            text-align: center;
+            color: #666;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        #drop-zone.drag-over {
+            background-color: #e9ecef;
+            border-color: #0d6efd;
+        }
+        #file-list li {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+        .file-name {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 15px;
+        }
+        .file-controls button {
+            margin-left: 5px;
+        }
+        #status {
+            font-weight: bold;
+            min-height: 50px; /* Reserve space to prevent layout shift */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Hide the default file input */
+        #file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html">All&nbsp;Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container my-4 my-md-5">
+        <header class="text-center mb-4">
+            <h1 class="display-5">Image & PDF Merger</h1>
+            <p class="lead">Combine JPG, PNG, and PDF files into a single PDF document.</p>
+            <p class="text-muted"><i class="bi bi-shield-lock"></i> All processing is done in your browser. Your files are never uploaded.</p>
+        </header>
+
+        <main>
+            <!-- Drop Zone and File Input -->
+            <div id="drop-zone" class="mb-4">
+                <i class="bi bi-cloud-arrow-up" style="font-size: 3rem;"></i>
+                <p class="mt-2 mb-0">Drag & drop files here, or</p>
+                <label for="file-input" class="btn btn-primary mt-2">
+                    <i class="bi bi-folder2-open"></i> Choose Files
+                </label>
+                <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.pdf">
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-buttons" class="d-flex justify-content-center flex-wrap gap-2 mb-3 d-none">
+                 <button id="merge-btn" class="btn btn-success btn-lg">
+                    <i class="bi bi-file-earmark-zip-fill"></i> Merge to PDF
+                </button>
+                <button id="clear-btn" class="btn btn-danger btn-lg">
+                    <i class="bi bi-trash-fill"></i> Clear All
+                </button>
+            </div>
+
+            <!-- File List -->
+            <ul id="file-list" class="list-unstyled">
+                <!-- File items will be dynamically inserted here -->
+            </ul>
+
+            <!-- Status/Progress Area -->
+            <div id="status" class="mt-3 text-center"></div>
+
+        </main>
+        
+        <footer class="text-center mt-5 text-muted">
+            <p><small>Created with HTML, Bootstrap, and pdf-lib.js</small></p>
+        </footer>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const { PDFDocument, rgb } = PDFLib;
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileListContainer = document.getElementById('file-list');
+    const actionButtons = document.getElementById('action-buttons');
+    const mergeBtn = document.getElementById('merge-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const statusDiv = document.getElementById('status');
+    
+    let filesToProcess = [];
+
+    // --- Drag and Drop Event Handlers ---
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    // --- Button and Input Event Handlers ---
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+    mergeBtn.addEventListener('click', mergeFiles);
+    clearBtn.addEventListener('click', clearAll);
+
+    // Event delegation for reordering and removing files
+    fileListContainer.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+        
+        const li = target.closest('li');
+        const index = parseInt(li.dataset.index, 10);
+
+        if (target.classList.contains('move-up')) moveFile(index, -1);
+        if (target.classList.contains('move-down')) moveFile(index, 1);
+        if (target.classList.contains('remove-file')) removeFile(index);
+    });
+
+    function handleFiles(newFiles) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        for (const file of newFiles) {
+            if (allowedTypes.includes(file.type)) {
+                filesToProcess.push(file);
+            } else {
+                alert(`Unsupported file type: ${file.name} (${file.type}). Only JPG, PNG, and PDF are allowed.`);
+            }
+        }
+        renderFileList();
+    }
+    
+    function renderFileList() {
+        fileListContainer.innerHTML = '';
+        if (filesToProcess.length > 0) {
+            actionButtons.classList.remove('d-none');
+        } else {
+            actionButtons.classList.add('d-none');
+        }
+
+        filesToProcess.forEach((file, index) => {
+            const li = document.createElement('li');
+            li.dataset.index = index;
+            
+            const fileIcon = getFileIcon(file.type);
+
+            li.innerHTML = `
+                <i class="bi ${fileIcon} fs-4 me-3"></i>
+                <span class="file-name" title="${file.name}">${file.name}</span>
+                <span class="file-controls ms-auto">
+                    <button class="btn btn-sm btn-outline-secondary move-up" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                        <i class="bi bi-arrow-up"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary move-down" ${index === filesToProcess.length - 1 ? 'disabled' : ''} title="Move Down">
+                        <i class="bi bi-arrow-down"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger remove-file" title="Remove">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </span>
+            `;
+            fileListContainer.appendChild(li);
+        });
+    }
+    
+    function getFileIcon(fileType) {
+        if (fileType.startsWith('image/')) return 'bi-file-earmark-image';
+        if (fileType === 'application/pdf') return 'bi-file-earmark-pdf';
+        return 'bi-file-earmark';
+    }
+
+    function moveFile(index, direction) {
+        if (direction === -1 && index > 0) {
+            [filesToProcess[index - 1], filesToProcess[index]] = [filesToProcess[index], filesToProcess[index - 1]];
+        } else if (direction === 1 && index < filesToProcess.length - 1) {
+            [filesToProcess[index], filesToProcess[index + 1]] = [filesToProcess[index + 1], filesToProcess[index]];
+        }
+        renderFileList();
+    }
+    
+    function removeFile(index) {
+        filesToProcess.splice(index, 1);
+        renderFileList();
+    }
+
+    function clearAll() {
+        filesToProcess = [];
+        fileInput.value = ''; // Reset file input
+        renderFileList();
+        statusDiv.innerHTML = '';
+    }
+    
+    function setUIState(isProcessing) {
+        mergeBtn.disabled = isProcessing;
+        clearBtn.disabled = isProcessing;
+        fileInput.disabled = isProcessing;
+        dropZone.style.pointerEvents = isProcessing ? 'none' : 'auto';
+        dropZone.style.opacity = isProcessing ? 0.7 : 1;
+    }
+
+    async function mergeFiles() {
+        if (filesToProcess.length === 0) {
+            alert("Please add files to merge.");
+            return;
+        }
+
+        setUIState(true);
+        statusDiv.innerHTML = `
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <span class="ms-3">Initializing...</span>
+        `;
+        
+        try {
+            const finalPdfDoc = await PDFDocument.create();
+
+            for (let i = 0; i < filesToProcess.length; i++) {
+                const file = filesToProcess[i];
+                statusDiv.innerHTML = `
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <span class="ms-3">Processing file ${i + 1} of ${filesToProcess.length}: ${file.name}</span>
+                `;
+
+                const fileBuffer = await file.arrayBuffer();
+                
+                if (file.type === 'application/pdf') {
+                    const donorPdfDoc = await PDFDocument.load(fileBuffer);
+                    const copiedPages = await finalPdfDoc.copyPages(donorPdfDoc, donorPdfDoc.getPageIndices());
+                    copiedPages.forEach(page => finalPdfDoc.addPage(page));
+                } 
+                else if (file.type.startsWith('image/')) {
+                    let image;
+                    if (file.type === 'image/jpeg') {
+                        image = await finalPdfDoc.embedJpg(fileBuffer);
+                    } else if (file.type === 'image/png') {
+                        image = await finalPdfDoc.embedPng(fileBuffer);
+                    }
+                    
+                    const page = finalPdfDoc.addPage();
+                    const { width, height } = page.getSize();
+                    const scaled = image.scaleToFit(width, height);
+                    
+                    page.drawImage(image, {
+                        x: (width - scaled.width) / 2,
+                        y: (height - scaled.height) / 2,
+                        width: scaled.width,
+                        height: scaled.height,
+                    });
+                }
+            }
+
+            statusDiv.innerHTML = `
+                <div class="spinner-border text-primary" role="status"></div>
+                <span class="ms-3">Finalizing PDF... Please wait.</span>
+            `;
+
+            const pdfBytes = await finalPdfDoc.save();
+            const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(pdfBlob);
+            link.download = 'merged-document.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+
+            statusDiv.innerHTML = `<i class="bi bi-check-circle-fill text-success fs-4 me-2"></i> Successfully created and downloaded your PDF!`;
+        
+        } catch (error) {
+            console.error(error);
+            statusDiv.innerHTML = `<i class="bi bi-x-circle-fill text-danger fs-4 me-2"></i> An error occurred: ${error.message}`;
+        } finally {
+            setUIState(false);
+        }
+    }
+});
+</script>
+
+</body>
+</html>

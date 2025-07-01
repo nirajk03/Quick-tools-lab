@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Resume Maker</title>
+    <!-- Google Font + Font Awesome (for icons) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary:#4361ee;
+            --primary-dark:#3a56d4;
+            --dark:#212529;
+            --secondary-color: #f4f4f9;
+            --text-color: #333;
+            --border-color: #ddd;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: 80px; /* Space for fixed header */
+        }
+
+        /* ---------- Header ---------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            color: var(--dark);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all .3s;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* --- Main Layout Container --- */
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto;
+            gap: 20px;
+        }
+
+        /* --- Form Section --- */
+        .form-container {
+            flex: 1;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            height: fit-content;
+        }
+
+        .form-container h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group.radio-group label {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        /* Qualification Entry Styles */
+        .qualification-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .qualification-entry input {
+             width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        .remove-qual-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            line-height: 24px;
+            text-align: center;
+        }
+        #addQualificationBtn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #addQualificationBtn:hover {
+             background-color: var(--primary-dark);
+        }
+
+        /* --- Resume Preview Section --- */
+        .resume-preview {
+            flex: 1.2;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            position: sticky;
+            top: 100px; /* Below header */
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .preview-header h2 {
+            color: var(--primary);
+        }
+        
+        #printBtn {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        #printBtn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* --- Resume Content Styling --- */
+        #resume-output {
+            border: 1px solid var(--border-color);
+            padding: 30px;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #resumePic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--border-color);
+            object-fit: cover;
+            margin-bottom: 15px;
+            background-color: #e0e0e0;
+        }
+
+        #resumeName {
+            font-size: 2.5em;
+            color: var(--text-color);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .resume-section {
+            margin-bottom: 25px;
+        }
+
+        .resume-section h3 {
+            font-size: 1.4em;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .details-grid p { margin: 0; }
+        .single-column p, .other-skills-content { white-space: pre-wrap; }
+
+        /* Qualification Table Styles */
+        .qualification-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .qualification-table th, .qualification-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        .qualification-table th {
+            background-color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        /* --- Responsive Styles for Mobile --- */
+        @media (max-width: 992px) {
+            .container { flex-direction: column; }
+            .resume-preview { position: static; height: auto; margin-top: 20px; }
+            .details-grid { grid-template-columns: 1fr; }
+            .qualification-table { font-size: 12px; }
+        }
+
+        /* --- Print Styles --- */
+        @media print {
+            body { background-color: #fff; }
+            .header, .form-container, .preview-header { display: none; }
+            .resume-preview {
+                width: 100%; box-shadow: none; border: none; position: static;
+                height: auto; padding: 0; margin: 0;
+            }
+             #resume-output { border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html">All&nbsp;Tools</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Input Form Section -->
+        <div class="form-container">
+            <h1>Resume Details</h1>
+            <form id="resumeForm">
+                <!-- Personal Details -->
+                <div class="form-group">
+                    <label for="profilePicInput">Profile Picture</label>
+                    <input type="file" id="profilePicInput" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="nameInput">Full Name</label>
+                    <input type="text" id="nameInput" placeholder="e.g., John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="fatherNameInput">Father's Name</label>
+                    <input type="text" id="fatherNameInput" placeholder="e.g., Richard Doe">
+                </div>
+                <div class="form-group">
+                    <label for="motherNameInput">Mother's Name</label>
+                    <input type="text" id="motherNameInput" placeholder="e.g., Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label for="dobInput">Date of Birth</label>
+                    <input type="date" id="dobInput">
+                </div>
+                <div class="form-group">
+                    <label for="phoneInput">Mobile Number</label>
+                    <input type="tel" id="phoneInput" placeholder="e.g., +1 234 567 890">
+                </div>
+                <div class="form-group">
+                    <label for="emailInput">Email Address</label>
+                    <input type="email" id="emailInput" placeholder="e.g., john.doe@example.com">
+                </div>
+                 <div class="form-group">
+                    <label for="religionInput">Religion</label>
+                    <input type="text" id="religionInput" placeholder="e.g., Christianity, Islam, Hinduism">
+                </div>
+                <div class="form-group">
+                    <label>Marital Status</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="maritalStatus" value="Married" checked> Married</label>
+                        <label><input type="radio" name="maritalStatus" value="Unmarried"> Unmarried</label>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="addressInput">Address</label>
+                    <textarea id="addressInput" placeholder="Enter your full address"></textarea>
+                </div>
+                
+                <!-- Qualification Section -->
+                <div class="form-group">
+                    <label>Qualifications</label>
+                    <div id="qualifications-list">
+                        <!-- Default entry for 10th -->
+                        <div class="qualification-entry">
+                            <input type="text" class="qual-exam" placeholder="Exam" value="10th Standard">
+                            <input type="text" class="qual-board" placeholder="Board / University">
+                            <input type="text" class="qual-year" placeholder="Passing Year">
+                            <input type="text" class="qual-percent" placeholder="Percentage / CGPA">
+                        </div>
+                        <!-- Default entry for 12th -->
+                        <div class="qualification-entry">
+                             <input type="text" class="qual-exam" placeholder="Exam" value="12th Standard">
+                             <input type="text" class="qual-board" placeholder="Board / University">
+                             <input type="text" class="qual-year" placeholder="Passing Year">
+                             <input type="text" class="qual-percent" placeholder="Percentage / CGPA">
+                        </div>
+                    </div>
+                    <button type="button" id="addQualificationBtn" style="margin-top: 10px;">+ Add Another Qualification</button>
+                </div>
+
+                <!-- Other Qualifications / Skills -->
+                <div class="form-group">
+                    <label for="otherQualificationInput">Other Qualifications / Skills</label>
+                    <textarea id="otherQualificationInput" placeholder="e.g.,
+- Certified in Web Development
+- Proficient in Microsoft Office Suite
+- Fluent in English and Spanish"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Resume Preview Section -->
+        <div class="resume-preview">
+            <div class="preview-header">
+                <h2>Live Preview</h2>
+                <button id="printBtn">Print / Download PDF</button>
+            </div>
+            
+            <div id="resume-output">
+                <div class="resume-header">
+                    <img id="resumePic" src="https://via.placeholder.com/150" alt="Profile Picture">
+                    <h2 id="resumeName">Your Name</h2>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Personal Details</h3>
+                    <div class="details-grid">
+                        <p><strong>Father's Name:</strong> <span id="resumeFatherName"></span></p>
+                        <p><strong>Mother's Name:</strong> <span id="resumeMotherName"></span></p>
+                        <p><strong>Date of Birth:</strong> <span id="resumeDob"></span></p>
+                        <p><strong>Mobile No:</strong> <span id="resumePhone"></span></p>
+                        <p><strong>Email:</strong> <span id="resumeEmail"></span></p>
+                        <p><strong>Religion:</strong> <span id="resumeReligion"></span></p>
+                        <p><strong>Marital Status:</strong> <span id="resumeMaritalStatus"></span></p>
+                    </div>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Address</h3>
+                    <div class="single-column">
+                        <p id="resumeAddress"></p>
+                    </div>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Qualification</h3>
+                    <table class="qualification-table">
+                        <thead>
+                            <tr>
+                                <th>Exam</th>
+                                <th>Board / University</th>
+                                <th>Passing Year</th>
+                                <th>Percentage / CGPA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resumeQualificationTableBody">
+                            <!-- JS will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="resume-section">
+                    <h3>Other Qualifications & Skills</h3>
+                    <div class="other-skills-content" id="resumeOtherQualification"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qualificationsList = document.getElementById('qualifications-list');
+            const addQualificationBtn = document.getElementById('addQualificationBtn');
+
+            // --- Function to add a new qualification entry to the form ---
+            function addQualificationEntry() {
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('qualification-entry');
+                
+                entryDiv.innerHTML = `
+                    <input type="text" class="qual-exam" placeholder="Exam (e.g., Graduation)">
+                    <input type="text" class="qual-board" placeholder="Board / University">
+                    <input type="text" class="qual-year" placeholder="Passing Year">
+                    <input type="text" class="qual-percent" placeholder="Percentage / CGPA">
+                    <button type="button" class="remove-qual-btn">X</button>
+                `;
+                
+                qualificationsList.appendChild(entryDiv);
+                
+                // Add event listeners to new inputs for live update
+                entryDiv.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('input', generateResume);
+                });
+
+                // Add event listener to the new remove button
+                entryDiv.querySelector('.remove-qual-btn').addEventListener('click', function() {
+                    entryDiv.remove();
+                    generateResume(); // Update resume after removing
+                });
+            }
+            
+            // --- Event Listener for the 'Add' button ---
+            addQualificationBtn.addEventListener('click', addQualificationEntry);
+
+            // --- Main function to update the entire resume preview ---
+            function generateResume() {
+                // Personal Info
+                document.getElementById('resumeName').innerText = document.getElementById('nameInput').value || 'Your Name';
+                document.getElementById('resumeFatherName').innerText = document.getElementById('fatherNameInput').value;
+                document.getElementById('resumeMotherName').innerText = document.getElementById('motherNameInput').value;
+                document.getElementById('resumeDob').innerText = document.getElementById('dobInput').value;
+                document.getElementById('resumePhone').innerText = document.getElementById('phoneInput').value;
+                document.getElementById('resumeEmail').innerText = document.getElementById('emailInput').value;
+                document.getElementById('resumeReligion').innerText = document.getElementById('religionInput').value;
+                document.getElementById('resumeAddress').innerText = document.getElementById('addressInput').value;
+                document.getElementById('resumeOtherQualification').innerText = document.getElementById('otherQualificationInput').value;
+
+                // Marital Status
+                const maritalStatus = document.querySelector('input[name="maritalStatus"]:checked');
+                if (maritalStatus) {
+                    document.getElementById('resumeMaritalStatus').innerText = maritalStatus.value;
+                }
+
+                // --- Generate Qualification Table ---
+                const tableBody = document.getElementById('resumeQualificationTableBody');
+                tableBody.innerHTML = ''; // Clear existing rows
+                
+                const qualificationEntries = document.querySelectorAll('.qualification-entry');
+                
+                qualificationEntries.forEach(entry => {
+                    const exam = entry.querySelector('.qual-exam').value;
+                    const board = entry.querySelector('.qual-board').value;
+                    const year = entry.querySelector('.qual-year').value;
+                    const percent = entry.querySelector('.qual-percent').value;
+
+                    // Only add a row if at least one field is filled
+                    if (exam || board || year || percent) {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).innerText = exam;
+                        row.insertCell(1).innerText = board;
+                        row.insertCell(2).innerText = year;
+                        row.insertCell(3).innerText = percent;
+                    }
+                });
+            }
+
+            // --- Image Upload Handling ---
+            document.getElementById('profilePicInput').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('resumePic').src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // --- Add event listeners to all form inputs to trigger live update ---
+            document.querySelectorAll('#resumeForm input, #resumeForm textarea').forEach(input => {
+                input.addEventListener('input', generateResume);
+            });
+            
+            // --- Print Button Functionality ---
+            document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+            // --- Initial call to populate the resume ---
+            generateResume();
+        });
+    </script>
+</body>
+</html>

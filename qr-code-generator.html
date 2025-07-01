@@ -4,20 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QR Code Generator Tool</title>
+  <!-- ⬇️ 1) CSS  —  यह <head> टैग के अंदर रखें -->
+  <!-- Google Font + Font Awesome (आइकनों के लिए) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    /* --- Same Styling (No Changes to UI) --- */
+    :root{
+        --primary:#4361ee;
+        --primary-dark:#3a56d4;
+        --dark:#212529;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+
+    /* body पर padding‑top ज़रूर रखें ताकि कंटेंट हेडर के नीचे से शुरू हो */
+    body{
+        font-family:'Poppins',sans-serif;
+        padding-top:80px;      /* header की ऊँचाई के बराबर */
+    }
+
+    /* ---------- Header ---------- */
+    .header{
+        position:fixed;
+        top:0; left:0;
+        width:100%;
+        background:#fff;
+        color:var(--dark);
+        padding:15px 20px;
+        box-shadow:0 2px 10px rgba(0,0,0,.1);
+        z-index:1000;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+    .logo{
+        font-size:24px;
+        font-weight:700;
+        color:var(--primary);
+        cursor:pointer;
+        transition:transform .3s;
+    }
+    .logo:hover{transform:scale(1.05);}
+    .nav-links{display:flex;gap:20px;}
+    .nav-links a{
+        color:var(--dark);
+        text-decoration:none;
+        font-size:16px;
+        padding:5px 10px;
+        border-radius:5px;
+        transition:all .3s;
+    }
+    .nav-links a:hover{color:var(--primary);}
+
+    /* --- Original QR Code Generator Styling --- */
     .qr-generator-container {
       max-width: 800px;
       margin: 2rem auto;
       padding: 1.5rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     .qr-generator-title {
       font-size: 1.8rem;
       text-align: center;
       margin-bottom: 0.5rem;
-      color: #2563eb;
+      color: var(--primary);
     }
 
     .qr-generator-subtitle {
@@ -58,8 +110,8 @@
 
     .qr-generator-textarea:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
     }
 
     .qr-generator-actions {
@@ -70,7 +122,7 @@
     .qr-generator-btn {
       display: inline-block;
       padding: 0.75rem 1.5rem;
-      background-color: #2563eb;
+      background-color: var(--primary);
       color: white;
       border: none;
       border-radius: 8px;
@@ -82,7 +134,7 @@
 
     .qr-generator-btn:hover,
     .qr-generator-btn:focus {
-      background-color: #1d4ed8;
+      background-color: var(--primary-dark);
       outline: none;
     }
 
@@ -131,6 +183,17 @@
   </style>
 </head>
 <body>
+  <!-- ⬇️ 2) HTML  —  यह <body> के शुरू में रखें -->
+  <header class="header">
+      <div class="logo" onclick="window.location.href='index.html'">Quick Tools Lab</div>
+
+      <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="index.html">All&nbsp;Tools</a>
+          <a href="contact.html">Contact</a>
+      </nav>
+  </header>
+
   <div class="qr-generator-container">
     <h2 class="qr-generator-title">QR Code Generator</h2>
     <p class="qr-generator-subtitle">Enter any text or URL to generate a QR code</p>
@@ -212,6 +275,5 @@
       qrContent.focus();
     });
   </script>
-  
 </body>
 </html>
